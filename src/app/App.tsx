@@ -1,11 +1,11 @@
 import { Provider } from 'react-redux';
-import { CounterWithRedux } from '../features/CounterWithRedux';
 import { store } from './store';
+import { CompaniesTable } from '../widget/CompaniesTable';
 
 function App() {
   return (
     <Provider store={store}>
-      <CounterWithRedux />
+      <CompaniesTable />
     </Provider>
   );
 }

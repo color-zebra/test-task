@@ -1,10 +1,5 @@
+import { Company } from '../types/shared';
 import { getRandomElement } from '../utils/getRandomElement';
-
-type Company = {
-  name: string;
-  address: string;
-  id: string;
-};
 
 const TOTAL_COMPANIES = 10_000;
 

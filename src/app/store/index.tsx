@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import counterReducer from './counterSlice';
+import companiesReducer from '../../widget/CompaniesTable/model/slice';
 
 export const reducer = {
-  counter: counterReducer,
+  companies: companiesReducer,
 };
 
 export const store = configureStore({
