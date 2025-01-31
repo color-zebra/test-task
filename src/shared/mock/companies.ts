@@ -1,7 +1,7 @@
-import { Company } from '../types/shared';
+import { CompanyDTO } from '../types/shared';
 import { getRandomElement } from '../utils/getRandomElement';
 
-const TOTAL_COMPANIES = 10_000;
+const TOTAL_COMPANIES = 100;
 
 const FIRST_WORDS = ['ПАО', 'ЗАО', 'ООО', 'ОАО'];
 
@@ -72,7 +72,7 @@ const generateName = () =>
     SECOND_WORDS,
   )} ${getRandomElement(THIRD_WORD)}"`;
 
-export const mockCompanies: Company[] = Array.from(
+export const mockCompanies: CompanyDTO[] = Array.from(
   { length: TOTAL_COMPANIES },
   (_, index) => ({
     name: generateName(),
