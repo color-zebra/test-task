@@ -1,0 +1,11 @@
+.row {
+  border-bottom: 2px solid black;
+  color: var(--accent-color);
+  td {
+    height: var(--row-height);
+  }
+
+  td:nth-child(1) {
+    text-align: center;
+  }
+}

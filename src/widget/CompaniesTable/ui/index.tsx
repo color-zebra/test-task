@@ -7,14 +7,14 @@ import {
   getTotalCompaniesLength,
   loadMoreCompanies,
   toggleSelectAll,
-  toggleSelectCompany,
 } from '../model/slice';
 import { useVirtualScroll } from '../../../shared/hooks/useVirtualScroll';
-import { TableRow } from '../../../shared/ui/TableRow';
 import { TableHead } from '../../../shared/ui/TableHead';
 
 import s from './CompaniesTable.module.scss';
 import { CreateCompanyForm } from '../../../features/CreateCompanyForm';
+import { CompaniesRow } from './CompaniesRow';
+
 const ROW_HEIGHT = 60;
 
 export const CompaniesTable = () => {
@@ -38,7 +38,6 @@ export const CompaniesTable = () => {
 
   const deleteSelected = () => dispatch(deleteSelectedCompanies());
   const loadMore = () => dispatch(loadMoreCompanies());
-
   const itemsToRender = companies.slice(startIndex, endIndex + 1);
   const isAllChecked =
     companies.every(({ isSelected }) => isSelected) && companies.length !== 0;
@@ -60,18 +59,8 @@ export const CompaniesTable = () => {
               {'Адрес'}
             </TableHead>
             <tbody>
-              {itemsToRender.map(({ name, id, address, isSelected }) => (
-                <TableRow className={s.table__row} key={id}>
-                  <input
-                    type="checkbox"
-                    checked={isSelected}
-                    onChange={() =>
-                      dispatch(toggleSelectCompany({ id, isSelected }))
-                    }
-                  />
-                  {name}
-                  {address}
-                </TableRow>
+              {itemsToRender.map((company) => (
+                <CompaniesRow company={company} key={company.id} />
               ))}
             </tbody>
             {companies.length < totalCompaniesLength && (

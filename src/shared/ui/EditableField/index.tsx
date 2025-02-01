@@ -4,6 +4,7 @@ import s from './EditableField.module.scss';
 
 type EditableFieldProps = HTMLAttributes<HTMLInputElement> & {
   onEditComplete: (val: string) => void;
+  defaultValue?: string;
 };
 
 export const EditableField = ({
@@ -21,8 +22,14 @@ export const EditableField = ({
     key,
     target,
   }: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (key === 'Enter' || key === 'Escape') {
-      (target as HTMLTextAreaElement).blur();
+    const input = target as HTMLTextAreaElement;
+    if (key === 'Enter') {
+      input.blur();
+    }
+
+    if (key === 'Escape') {
+      input.value = defaultValue ?? '';
+      input.blur();
     }
   };
   return (

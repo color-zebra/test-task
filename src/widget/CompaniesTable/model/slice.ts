@@ -4,7 +4,13 @@ import { mockCompanies } from '../../../shared/mock/companies';
 
 const ITEMS_IN_LOAD_AMOUNT = 10;
 
-type CompanyStoreData = CompanyDTO & { isSelected: boolean };
+export type CompanyStoreData = CompanyDTO & { isSelected: boolean };
+
+export type EditFieldPayload = {
+  id: string;
+  field: 'address' | 'name';
+  value: string;
+};
 
 interface CompaniesState {
   /* 
@@ -42,6 +48,14 @@ export const companiesSlice = createSlice({
     },
     addCompany: (state, action: PayloadAction<CompanyDTO>) => {
       state.companies.push({ ...action.payload, isSelected: false });
+    },
+    editCompanyField: (state, action: PayloadAction<EditFieldPayload>) => {
+      const { field, id, value } = action.payload;
+      const company = state.companies.find((company) => company.id === id);
+
+      if (company) {
+        company[field] = value;
+      }
     },
     loadMoreCompanies: (state) => {
       state.itemsToRender = state.itemsToRender + ITEMS_IN_LOAD_AMOUNT;
@@ -81,6 +95,7 @@ const {
   loadMoreCompanies,
   toggleSelectAll,
   toggleSelectCompany,
+  editCompanyField,
 } = companiesSlice.actions;
 const { getAllCompanies, getItemsToRender, getTotalCompaniesLength } =
   companiesSlice.selectors;
@@ -96,6 +111,7 @@ const getCompaniesToRender = createSelector(
 export {
   addCompany,
   deleteSelectedCompanies,
+  editCompanyField,
   getAllCompanies,
   getCompaniesToRender,
   loadMoreCompanies,
