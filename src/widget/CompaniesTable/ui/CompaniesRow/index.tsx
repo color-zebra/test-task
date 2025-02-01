@@ -18,7 +18,7 @@ export const CompaniesRow = memo(
       dispatch(editCompanyField(companyData));
 
     return (
-      <TableRow className={s.row}>
+      <TableRow className={`${s.row}${isSelected ? ` ${s.selected}` : ''}`}>
         <input
           type="checkbox"
           checked={isSelected}
