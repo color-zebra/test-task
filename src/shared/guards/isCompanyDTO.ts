@@ -1,4 +1,4 @@
-import { CompanyDTO } from '../types/shared';
+import { CompanyDTO } from '../types/dto';
 
 export const isCompanyDTO = (
   obj: Record<string, unknown>,

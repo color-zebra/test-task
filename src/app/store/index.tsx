@@ -1,8 +1,8 @@
 import { configureStore } from '@reduxjs/toolkit';
-import companiesReducer from '../../widget/CompaniesTable/model/slice';
+import companiesReducer from '../../shared/store/slices/companies';
 import { useDispatch, useSelector } from 'react-redux';
 
-export const reducer = {
+const reducer = {
   companies: companiesReducer,
 };
 

@@ -2,7 +2,7 @@ import { FormEvent } from 'react';
 import { useAppDispatch } from '../../app/store';
 import { formDataToObject } from '../../shared/utils/formDataToObject';
 import { isCompanyDTO } from '../../shared/guards/isCompanyDTO';
-import { addCompany } from '../../widget/CompaniesTable/model/slice';
+import { addCompany } from '../../shared/store/slices/companies';
 
 import s from './CreateCompanyForm.module.scss';
 

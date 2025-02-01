@@ -4,7 +4,7 @@ import {
   editCompanyField,
   EditFieldPayload,
   toggleSelectCompany,
-} from '../../model/slice';
+} from '../../../../shared/store/slices/companies';
 import s from './CompaniesRow.module.scss';
 import { TableRow } from '../../../../shared/ui/TableRow';
 import { EditableField } from '../../../../shared/ui/EditableField';

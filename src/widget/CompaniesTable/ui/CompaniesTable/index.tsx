@@ -1,19 +1,19 @@
 import { useCallback, useRef } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../app/store';
-import { Sentinel } from '../../../shared/ui/Sentinel';
+import { useAppDispatch, useAppSelector } from '../../../../app/store';
+import { Sentinel } from '../../../../shared/ui/Sentinel';
 import {
   deleteSelectedCompanies,
   getCompaniesToRender,
   getTotalCompaniesLength,
   loadMoreCompanies,
   toggleSelectAll,
-} from '../model/slice';
-import { useVirtualScroll } from '../../../shared/hooks/useVirtualScroll';
-import { TableHead } from '../../../shared/ui/TableHead';
+} from '../../../../shared/store/slices/companies';
+import { useVirtualScroll } from '../../../../shared/hooks/useVirtualScroll';
+import { TableHead } from '../../../../shared/ui/TableHead';
 
 import s from './CompaniesTable.module.scss';
-import { CreateCompanyForm } from '../../../features/CreateCompanyForm';
-import { CompaniesRow } from './CompaniesRow';
+import { CreateCompanyForm } from '../../../../features/CreateCompanyForm';
+import { CompaniesRow } from '../CompaniesRow';
 
 const ROW_HEIGHT = 60;
 

@@ -1,6 +1,6 @@
 import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { CompanyDTO } from '../../../shared/types/shared';
-import { mockCompanies } from '../../../shared/mock/companies';
+import { CompanyDTO } from '../../types/dto';
+import { mockCompanies } from '../../mock/companies';
 
 const ITEMS_IN_LOAD_AMOUNT = 10;
 

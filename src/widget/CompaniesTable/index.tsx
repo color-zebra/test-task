@@ -1,3 +1,3 @@
-import { CompaniesTable } from './ui';
+import { CompaniesTable } from './ui/CompaniesTable';
 
 export { CompaniesTable };

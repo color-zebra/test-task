@@ -1,4 +1,4 @@
-import { CompanyDTO } from '../types/shared';
+import { CompanyDTO } from '../types/dto';
 import { getRandomElement } from '../utils/getRandomElement';
 
 const TOTAL_COMPANIES = 100;
