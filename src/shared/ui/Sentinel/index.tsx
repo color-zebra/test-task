@@ -9,7 +9,7 @@ export const Sentinel = ({
   onInView,
   getIntersectionContainer,
 }: SentinelProps) => {
-  const targetRef = useRef<HTMLDivElement>(null);
+  const targetRef = useRef<HTMLTableSectionElement>(null);
   useEffect(() => {
     const target = targetRef.current;
     if (!target) {
@@ -38,5 +38,5 @@ export const Sentinel = ({
       }
     };
   });
-  return <div ref={targetRef} />;
+  return <tfoot ref={targetRef} />;
 };

@@ -1,4 +1,4 @@
-import { FormEvent } from 'react';
+import { FormEvent, useState } from 'react';
 import { useAppDispatch } from '../../app/store';
 import { formDataToObject } from '../../shared/utils/formDataToObject';
 import { isCompanyDTO } from '../../shared/guards/isCompanyDTO';
@@ -8,6 +8,7 @@ import s from './CreateCompanyForm.module.scss';
 
 export const CreateCompanyForm = () => {
   const dispatch = useAppDispatch();
+  const [error, setError] = useState<null | string>(null);
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const form = e.target as HTMLFormElement;
@@ -17,13 +18,24 @@ export const CreateCompanyForm = () => {
       id: Date.now().toString(),
     };
 
-    if (isCompanyDTO(data)) {
+    if (
+      isCompanyDTO(data) &&
+      data.address.length !== 0 &&
+      data.name.length !== 0
+    ) {
       dispatch(addCompany(data));
       form.reset();
+    } else {
+      setError('Заполните все поля');
+
+      setTimeout(() => {
+        setError(null);
+      }, 2000);
     }
   };
   return (
     <form className={s.form} onSubmit={handleSubmit}>
+      {error && <p className={s.error}>{error}</p>}
       <input
         className={s.input}
         placeholder="Название"
