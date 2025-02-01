@@ -1,0 +1,15 @@
+.form {
+  display: grid;
+  grid-template-columns: 140px 80px;
+}
+
+.input {
+  grid-column-start: 1;
+}
+
+.button {
+  padding: 0;
+  text-align: center;
+  grid-column-start: 2;
+  grid-row: 1/3;
+}

@@ -2,9 +2,23 @@ import { createSelector, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { CompanyDTO } from '../../../shared/types/shared';
 import { mockCompanies } from '../../../shared/mock/companies';
 
+const ITEMS_IN_LOAD_AMOUNT = 10;
+
 type CompanyStoreData = CompanyDTO & { isSelected: boolean };
 
 interface CompaniesState {
+  /* 
+    maybe i should use smthng like 
+
+    companies: {
+      key as companyId: {
+        address: ...,
+        name: ...,
+      }
+    }
+
+    instead of array, to minimize O(n) iterations, but looks like overengineering there
+  */
   companies: Array<CompanyStoreData>;
   itemsToRender: number;
 }
@@ -20,6 +34,7 @@ export const companiesSlice = createSlice({
   selectors: {
     getAllCompanies: (store) => store.companies,
     getItemsToRender: (store) => store.itemsToRender,
+    getTotalCompaniesLength: (store) => store.companies.length,
   },
   reducers: {
     deleteSelectedCompanies: (state) => {
@@ -28,21 +43,21 @@ export const companiesSlice = createSlice({
     addCompany: (state, action: PayloadAction<CompanyDTO>) => {
       state.companies.push({ ...action.payload, isSelected: false });
     },
-    setCompaniesToRender: (
-      state,
-      action: PayloadAction<Pick<CompaniesState, 'itemsToRender'>>,
-    ) => {
-      state.itemsToRender = action.payload.itemsToRender;
+    loadMoreCompanies: (state) => {
+      state.itemsToRender = state.itemsToRender + ITEMS_IN_LOAD_AMOUNT;
     },
+
     toggleSelectAll: (state) => {
       const isAllRenderedCompaniesSelected = state.companies
         .slice(0, state.itemsToRender)
         .every(({ isSelected }) => isSelected);
-      for (
-        let i = 0;
-        i < Math.min(state.itemsToRender, state.companies.length);
-        i++
-      ) {
+
+      const iterationLimit = Math.min(
+        state.itemsToRender,
+        state.companies.length,
+      );
+
+      for (let i = 0; i < iterationLimit; i++) {
         state.companies[i].isSelected = !isAllRenderedCompaniesSelected;
       }
     },
@@ -63,11 +78,12 @@ export const companiesSlice = createSlice({
 const {
   addCompany,
   deleteSelectedCompanies,
-  setCompaniesToRender,
+  loadMoreCompanies,
   toggleSelectAll,
   toggleSelectCompany,
 } = companiesSlice.actions;
-const { getAllCompanies, getItemsToRender } = companiesSlice.selectors;
+const { getAllCompanies, getItemsToRender, getTotalCompaniesLength } =
+  companiesSlice.selectors;
 
 const getCompaniesToRender = createSelector(
   [getAllCompanies, getItemsToRender],
@@ -82,8 +98,9 @@ export {
   deleteSelectedCompanies,
   getAllCompanies,
   getCompaniesToRender,
-  setCompaniesToRender,
+  loadMoreCompanies,
   toggleSelectAll,
   toggleSelectCompany,
+  getTotalCompaniesLength,
 };
 export default companiesSlice.reducer;

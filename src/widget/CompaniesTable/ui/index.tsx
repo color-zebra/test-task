@@ -2,108 +2,76 @@ import { useCallback, useRef } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/store';
 import { Sentinel } from '../../../shared/ui/Sentinel';
 import {
-  addCompany,
   deleteSelectedCompanies,
   getCompaniesToRender,
-  setCompaniesToRender,
+  getTotalCompaniesLength,
+  loadMoreCompanies,
   toggleSelectAll,
   toggleSelectCompany,
 } from '../model/slice';
 import { useVirtualScroll } from '../../../shared/hooks/useVirtualScroll';
-import { formDataToObject } from '../../../shared/utils/formDataToObject';
-import { isCompanyDTO } from '../../../shared/guards/isCompanyDTO';
+import { TableRow } from '../../../shared/ui/TableRow';
+import { TableHead } from '../../../shared/ui/TableHead';
 
-const ITEMS_IN_LOAD_AMOUNT = 10;
-const ROW_HEIGHT = 40;
+import s from './CompaniesTable.module.scss';
+import { CreateCompanyForm } from '../../../features/CreateCompanyForm';
+const ROW_HEIGHT = 60;
 
 export const CompaniesTable = () => {
-  const dispatch = useAppDispatch();
-  const companies = useAppSelector(getCompaniesToRender);
-  const totalCompaniesLength = useAppSelector(
-    (store) => store.companies.companies.length,
-  );
-
   const containerRef = useRef<HTMLDivElement>(null);
   const getContainer = useCallback(() => containerRef.current, []);
-  const loadMore = () => {
-    dispatch(
-      setCompaniesToRender({
-        itemsToRender: companies.length + ITEMS_IN_LOAD_AMOUNT,
-      }),
-    );
-  };
+
+  const dispatch = useAppDispatch();
+  const companies = useAppSelector(getCompaniesToRender);
+  const totalCompaniesLength = useAppSelector(getTotalCompaniesLength);
+
   const { startIndex, endIndex, totalHeight, offset } = useVirtualScroll({
     getScrollElement: getContainer,
     itemHeight: ROW_HEIGHT,
     totalItems: companies.length,
   });
+  const virtualizationStyle = {
+    '--row-height': `${ROW_HEIGHT}px`,
+    '--total-height': `${totalHeight}px`,
+    '--offset': `${offset}px`,
+  } as React.CSSProperties;
+
+  const deleteSelected = () => dispatch(deleteSelectedCompanies());
+  const loadMore = () => dispatch(loadMoreCompanies());
 
   const itemsToRender = companies.slice(startIndex, endIndex + 1);
-
   const isAllChecked =
     companies.every(({ isSelected }) => isSelected) && companies.length !== 0;
+  const isSomeSelected =
+    isAllChecked || companies.some(({ isSelected }) => isSelected);
 
   return (
     <>
-      <div
-        style={{
-          height: 600,
-          overflow: 'auto',
-          width: '620px',
-          position: 'relative',
-        }}
-        ref={containerRef}
-      >
-        <div
-          style={{
-            height: totalHeight,
-            position: 'relative',
-          }}
-        >
-          <table
-            style={{
-              position: 'absolute',
-              top: offset,
-              width: '100%',
-              // translate: `0 ${offset}px`,
-            }}
-          >
-            <thead
-              style={{
-                position: 'sticky',
-                top: 0,
-                translate: `0 0px`,
-                background: 'rebeccapurple',
-                color: 'white',
-              }}
-            >
-              <tr style={{ height: ROW_HEIGHT }}>
-                <th style={{ width: '50px' }}>
-                  <input
-                    type="checkbox"
-                    checked={isAllChecked}
-                    onChange={() => dispatch(toggleSelectAll())}
-                  />
-                </th>
-                <th style={{ width: '275px' }}>Название</th>
-                <th style={{ width: '275px' }}>Адрес</th>
-              </tr>
-            </thead>
+      <div style={virtualizationStyle} className={s.wrapper} ref={containerRef}>
+        <div className={s['scroll-wrapper']}>
+          <table className={s.table}>
+            <TableHead className={s.table__head}>
+              <input
+                type="checkbox"
+                checked={isAllChecked}
+                onChange={() => dispatch(toggleSelectAll())}
+              />
+              {'Название'}
+              {'Адрес'}
+            </TableHead>
             <tbody>
               {itemsToRender.map(({ name, id, address, isSelected }) => (
-                <tr style={{ height: ROW_HEIGHT }} key={id}>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={isSelected}
-                      onChange={() =>
-                        dispatch(toggleSelectCompany({ id, isSelected }))
-                      }
-                    />
-                  </td>
-                  <td>{name}</td>
-                  <td>{address}</td>
-                </tr>
+                <TableRow className={s.table__row} key={id}>
+                  <input
+                    type="checkbox"
+                    checked={isSelected}
+                    onChange={() =>
+                      dispatch(toggleSelectCompany({ id, isSelected }))
+                    }
+                  />
+                  {name}
+                  {address}
+                </TableRow>
               ))}
             </tbody>
             {companies.length < totalCompaniesLength && (
@@ -115,31 +83,12 @@ export const CompaniesTable = () => {
           </table>
         </div>
       </div>
-
-      <button
-        onClick={() => dispatch(deleteSelectedCompanies())}
-        disabled={!companies.some(({ isSelected }) => isSelected)}
-      >
-        Удалить выбранные
-      </button>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          const formData = new FormData(e.target as HTMLFormElement);
-          const data = {
-            ...formDataToObject(formData),
-            id: Date.now().toString(),
-          };
-
-          if (isCompanyDTO(data)) {
-            dispatch(addCompany(data));
-          }
-        }}
-      >
-        <input name="name" type="text" />
-        <input name="address" type="text" />
-        <button>Добавить</button>
-      </form>
+      <div className={s.controls}>
+        <button onClick={deleteSelected} disabled={!isSomeSelected}>
+          Удалить
+        </button>
+        <CreateCompanyForm />
+      </div>
     </>
   );
 };
